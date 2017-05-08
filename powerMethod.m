@@ -1,4 +1,4 @@
-%% Power Method
+%% Power Method for Google Matrix
 % function [v] = powerMethod(A, alpha, url)
 %     n = size(A);
 %     n = n(1);
@@ -30,22 +30,43 @@
 %     v = v0;
 % end
 
- %% Blocked Power Method
-function [V,T] = powerMethod(A,m,alpha,iter)
+%% Blocked Power Method for Google Matrix
+% function [V,T] = powerMethod(A,m,alpha,iter)
+%     n = size(A);
+%     n = n(1);
+%     e = ones(n,1);
+%     % Initial Orthogonal Matrix
+%     V = eye(n,m);
+%     V1 = V;
+%     % matrix-vector product
+%     for j=1:m
+%         V1(:,j) = alpha*A*V(:,j)+(1-alpha)*(e'*V(:,j))*e/n;
+%     end
+%     for iter=1:iter
+%         [V,R] = qr(V1,0);
+%         for j=1:m
+%             V1(:,j) = alpha*A*V(:,j)+(1-alpha)*(e'*V(:,j))*e/n;
+%         end
+%         T = V'*V1;
+%     end
+% end
+
+%% Blocked Power Method for low rank matrix approximation
+function [V,T] = powerMethod(A,m,iter)
+    % Compute r eigenvectors and eigenvalues for matrix A'*A
     n = size(A);
-    n = n(1);
-    e = ones(n,1);
+    n = n(2);
     % Initial Orthogonal Matrix
-    V = eye(n,m);
+    V = eye(n,m,'double');
     V1 = V;
     % matrix-vector product
     for j=1:m
-        V1(:,j) = alpha*A*V(:,j)+(1-alpha)*(e'*V(:,j))*e/n;
+        V1(:,j) = A'*(A*V(:,j));
     end
     for iter=1:iter
         [V,R] = qr(V1,0);
         for j=1:m
-            V1(:,j) = alpha*A*V(:,j)+(1-alpha)*(e'*V(:,j))*e/n;
+            V1(:,j) = A'*(A*V(:,j));
         end
         T = V'*V1;
     end
